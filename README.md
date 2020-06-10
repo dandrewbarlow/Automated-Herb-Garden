@@ -12,7 +12,7 @@ An arduino based solution for techies who love spending 12 hours to forget about
 * Enclosure - I'm using a plasic set of drawers I picked up at Goodwill, this part is at your discretion (as with anything else but you get the point), just use common sense and a DIY attitude
 
 ## Dependencies
-I'm using Sparkfun's custom RTC Arduino Library ([github](https://github.com/sparkfun/SparkFun_DS3234_RTC_Arduino_Library) | [direct download](https://github.com/sparkfun/SparkFun_DS3234_RTC_Arduino_Library/archive/master.zip)
+I'm using Sparkfun's custom RTC Arduino Library ([github](https://github.com/sparkfun/SparkFun_DS3234_RTC_Arduino_Library) | [direct download](https://github.com/sparkfun/SparkFun_DS3234_RTC_Arduino_Library/archive/master.zip))
 
 Once again if so inclined I guess you could try to do a custom implementation, but I'm more of a goal oriented person myself.
 
