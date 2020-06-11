@@ -39,7 +39,7 @@
 #define LIGHT 9 
 
 // Moisture sensor, analog input
-#define MOISTURE A0
+#define MOISTURE A1
 
 // water pump control, not sure which pin to use yet
 #define PUMP 11
@@ -47,7 +47,7 @@
 #define DS13074_CS_PIN 10 // DeadOn RTC Chip-select pin
 
 // if on, enable serial logging for debugging
-bool debug = true;;
+bool debug = true;
 
 // are the lights on?
 bool lightsOn = true;
@@ -62,22 +62,30 @@ int minMoist = 255;
 // Functions /////////////////////
 //////////////////////////////////
 
-// Test various parts
-void testSensors() {
+// Test various parts by vals passed
+void testSensors(bool Time, bool Moisture, bool Lighting) {
   
   if (debug) {
-  Serial.print(" Hour: ");
-  Serial.print(rtc.hour());
-  Serial.print(" Minute: ");
-  Serial.print(rtc.minute());
-  Serial.print(" Second: ");
-  Serial.print(rtc.second());
+    
+    if (Time) {
+    Serial.print(" Hour: ");
+    Serial.print(rtc.hour());
+    Serial.print(" Minute: ");
+    Serial.print(rtc.minute());
+    Serial.print(" Second: ");
+    Serial.print(rtc.second());
+    }
 
-//  Serial.print("  Moisture: " + analogRead(MOISTURE));
+    if (Moisture) {
+      Serial.print("  Moisture: ");
+      Serial.print(analogRead(MOISTURE));
+    }
 
-  //print Light val
-    Serial.print("  Lighting:  " + lightVal);
-
+    if (Lighting) {
+    //print Light val
+    Serial.print("  Lighting:  ");
+    Serial.print(lightVal);
+    }
   Serial.println();
   }
 }
@@ -133,9 +141,10 @@ void water() {
 
 void setup() {
 
-  //Serial output
-  Serial.begin(9600);
-
+  if (debug) {
+    //Serial output
+    Serial.begin(9600);
+  }
   // pin inits
   pinMode(LIGHT, OUTPUT);
   pinMode(PUMP, OUTPUT);
@@ -162,7 +171,7 @@ void setup() {
 
 void loop() {
   rtc.update();
-  testSensors();
+  testSensors(0, 1, 0);
 
   // update lights every minute
   if (rtc.second() == 0) {
