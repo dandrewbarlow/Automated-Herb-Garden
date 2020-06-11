@@ -47,12 +47,12 @@
 #define DS13074_CS_PIN 10 // DeadOn RTC Chip-select pin
 
 // if on, enable serial logging for debugging
-bool debug;
+bool debug = true;;
 
 // are the lights on?
-bool lightsOn;
+bool lightsOn = true;
 // how bright are the lights?
-int lightVal;
+int lightVal = 0;
 
 // need to calibrate sensor to both water and air, start with worst case, and correct once exposed to both water & air
 int maxMoist = 0;
@@ -73,10 +73,10 @@ void testSensors() {
   Serial.print(" Second: ");
   Serial.print(rtc.second());
 
-  Serial.print("  Moisture: " + moisture);
+//  Serial.print("  Moisture: " + analogRead(MOISTURE));
 
   //print Light val
-  Serial.print("  Lighting:  " + lightVal);
+    Serial.print("  Lighting:  " + lightVal);
 
   Serial.println();
   }
