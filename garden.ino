@@ -1,17 +1,17 @@
 /*
 * Andrew Barlow
 * Automated Indoor Herb Gardening System
-* 
+*
 * This project aims to automatically water and light a small herb garden using an arduino
-* 
+*
 * My current watering strategy is to use a sensor to detect soil wetness and water at a certain dryness
-* 
+*
 * For lighting I plan on using Sparkfun's DS3234 Breakout board to keep track of the time and
 * use some strips of LED grow lights to light it during the daytime
-* Will probably use a 
-* 
+* Will probably use a
+*
 * disclaimer some code is from Sparkfun's DS3234 demo to make things easier (this is a project for fun)
-* 
+*
 */
 //////////////////////////////////
 // Libraries /////////////////////
@@ -34,15 +34,18 @@
 // Configurable Pin Definitions //
 //////////////////////////////////
 
-// light out, expected to change based on final circuit setup but should have pwm 
+// a button pin to test the motor without waiting till noon
+#define BUTTON 6
+
+// light out, expected to change based on final circuit setup but should have pwm
 // implementation will be a mosfet interacting with an external power supply
-#define LIGHT 9 
+#define LIGHT 9
 
 // Moisture sensor, analog input
 #define MOISTURE A1
 
 // water pump control, not sure which pin to use yet
-#define PUMP 11
+#define PUMP 4
 
 #define DS13074_CS_PIN 10 // DeadOn RTC Chip-select pin
 
@@ -64,9 +67,9 @@ int minMoist = 255;
 
 // Test various parts by vals passed
 void testSensors(bool Time, bool Moisture, bool Lighting) {
-  
+
   if (debug) {
-    
+
     if (Time) {
     Serial.print(" Hour: ");
     Serial.print(rtc.hour());
@@ -110,14 +113,41 @@ void lights() {
   else {
     lightVal = 0;
   }
-  
-  
+
+
   // take calculated value and get them lights to shine or nah
   analogWrite(LIGHT, lightVal);
 }
 
 void water() {
-  
+
+  // read button val to allow manual watering
+  bool on = digitalRead(BUTTON);
+
+  // test pump w/ prototype shield
+  Serial.print(on);
+  Serial.println();
+
+  if (on) {
+    digitalWrite(PUMP, HIGH);
+    Serial.print("PUMP ACTIVATED");
+    Serial.println();
+  }
+  else {
+    digitalWrite(PUMP, LOW);
+  }
+
+
+  // for now, im gonna try a time based solution, until I have time to test out the sensor, pump strength, etc.
+
+  //water at noon
+  if (rtc.hour() == 12 && rtc.minute() == 0) {
+    digitalWrite(PUMP, HIGH);
+  }
+
+  /*  MOISTURE SENSOR FAULTY
+   *   CODE ABANDONED BUT HERE FOR REFERENCE
+
   // read sensor val
   int moisture = analogRead(MOISTURE);
 
@@ -129,15 +159,14 @@ void water() {
     maxMoist = moisture;
   }
 
+  */
 
-// for now, im gonna try a time based solution, until I have time to test out the sensor, pump strength, etc.
-
-  //water at noon
-  if (rtc.hour() == 12 && rtc.minute() == 0) {
-    digitalWrite(PUMP, HIGH);
-  }
-  
 }
+
+
+//////////////////////////////////
+// SETUP /////////////////////////
+//////////////////////////////////
 
 void setup() {
 
@@ -146,10 +175,11 @@ void setup() {
     Serial.begin(9600);
   }
   // pin inits
+  pinMode(BUTTON, INPUT);
   pinMode(LIGHT, OUTPUT);
   pinMode(PUMP, OUTPUT);
-  pinMode(MOISTURE, INPUT);
-  
+  // pinMode(MOISTURE, INPUT);
+
 
   // initialize light state
   if ( rtc.hour() > 7 && rtc.hour() < 14) {
@@ -158,7 +188,7 @@ void setup() {
   else {
     lightsOn = false;
   }
-    
+
   // use pin def to start rtc module
   rtc.begin(DS13074_CS_PIN);
 
@@ -169,17 +199,21 @@ void setup() {
 
 }
 
+//////////////////////////////////
+// LOOP //////////////////////////
+//////////////////////////////////
+
 void loop() {
   rtc.update();
-  testSensors(0, 1, 0);
+  testSensors(1, 0, 1);
 
   // update lights every minute
   if (rtc.second() == 0) {
     lights();
   }
 
-  //water 
+  //water
   water();
-  
+
 
 }
