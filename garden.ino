@@ -13,12 +13,17 @@
 * disclaimer some code is from Sparkfun's DS3234 demo to make things easier (this is a project for fun)
 *
 */
+
+
+
 //////////////////////////////////
 // Libraries /////////////////////
 //////////////////////////////////
 
 #include <SPI.h>
 #include <SparkFunDS3234RTC.h>
+
+
 
 //////////////////////////////////
 // Custom Definitions ////////////
@@ -49,6 +54,11 @@
 
 #define DS13074_CS_PIN 10 // DeadOn RTC Chip-select pin
 
+
+//////////////////////////////////
+// GLOBAL VARIABLES //////////////
+//////////////////////////////////
+
 // if on, enable serial logging for debugging
 bool debug = true;
 
@@ -61,8 +71,13 @@ int lightVal = 0;
 int maxMoist = 0;
 int minMoist = 255;
 
+// keep hour, minute, second vals as their own variables to be refreshed/referenced by functions instead of making repeated calls to the rtc
+int h;
+int m;
+int s
+
 //////////////////////////////////
-// Functions /////////////////////
+// HELPER FUNCTIONS //////////////
 //////////////////////////////////
 
 // Test various parts by vals passed
@@ -70,13 +85,15 @@ void testSensors(bool Time, bool Moisture, bool Lighting) {
 
   if (debug) {
 
+    // output the current time
     if (Time) {
-    Serial.print(" Hour: ");
-    Serial.print(rtc.hour());
-    Serial.print(" Minute: ");
-    Serial.print(rtc.minute());
-    Serial.print(" Second: ");
-    Serial.print(rtc.second());
+    Serial.print("time: ");
+    Serial.print(h);
+    Serial.print(":");
+    Serial.print(m);
+    Serial.print(":");
+    Serial.print(s);
+    Serial.print("  ");
     }
 
     if (Moisture) {
@@ -89,17 +106,23 @@ void testSensors(bool Time, bool Moisture, bool Lighting) {
     Serial.print("  Lighting:  ");
     Serial.print(lightVal);
     }
+
   Serial.println();
   }
+
+}
+
+// update time values
+void refresh() {
+  rtc.update();
+  h = rtc.hour();
+  m = rtc.minute();
+  s = rtc.second();
 }
 
 // take time and map it to the appropriate lighting val
 // will ramp up from 0->255 from 7am->8am and back down from 7pm->8pm
 void lights() {
-
-  int h = rtc.hour();
-  int m = rtc.minute();
-
   // edge cases
   if (h == 7 || h == 14) {
     // map minute value to light value
@@ -141,7 +164,7 @@ void water() {
   // for now, im gonna try a time based solution, until I have time to test out the sensor, pump strength, etc.
 
   //water at noon
-  if (rtc.hour() == 12 && rtc.minute() == 0) {
+  if (h == 12 && m == 0) {
     digitalWrite(PUMP, HIGH);
   }
 
@@ -181,13 +204,6 @@ void setup() {
   // pinMode(MOISTURE, INPUT);
 
 
-  // initialize light state
-  if ( rtc.hour() > 7 && rtc.hour() < 14) {
-    lightsOn = true;
-  }
-  else {
-    lightsOn = false;
-  }
 
   // use pin def to start rtc module
   rtc.begin(DS13074_CS_PIN);
@@ -195,7 +211,17 @@ void setup() {
   // use autoTime() to set RTC with compiler's time; a few secs off but close enough
   rtc.autoTime();
 
-  rtc.update();
+  // update clock, set global vars for use
+  refresh();
+
+
+  // initialize light state
+  if ( h > 7 && h < 14) {
+    lightsOn = true;
+  }
+  else {
+    lightsOn = false;
+  }
 
 }
 
@@ -205,6 +231,7 @@ void setup() {
 
 void loop() {
   rtc.update();
+  refresh();
   testSensors(1, 0, 1);
 
   // update lights every minute
