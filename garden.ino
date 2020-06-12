@@ -67,21 +67,32 @@ bool lightsOn = true;
 // how bright are the lights?
 int lightVal = 0;
 
-// need to calibrate sensor to both water and air, start with worst case, and correct once exposed to both water & air
-int maxMoist = 0;
-int minMoist = 255;
+// bool to determine if water pump should be running
+bool pumpOn = false;
 
 // keep hour, minute, second vals as their own variables to be refreshed/referenced by functions instead of making repeated calls to the rtc
 int h;
 int m;
-int s
+int s;
+
+// will hold the value of the last second to be compared with the current and updated once a second (1000ms = interval) passes
+unsigned long previousMillis;
+const long interval = 1000;
+
+
+
+/*  Moisture sensor stuff
+// need to calibrate sensor to both water and air, start with worst case, and correct once exposed to both water & air
+int maxMoist = 0;
+int minMoist = 255;
+*/
 
 //////////////////////////////////
 // HELPER FUNCTIONS //////////////
 //////////////////////////////////
 
 // Test various parts by vals passed
-void testSensors(bool Time, bool Moisture, bool Lighting) {
+void testSensors(bool Time, bool Water, bool Lighting) {
 
   if (debug) {
 
@@ -96,9 +107,11 @@ void testSensors(bool Time, bool Moisture, bool Lighting) {
     Serial.print("  ");
     }
 
-    if (Moisture) {
-      Serial.print("  Moisture: ");
-      Serial.print(analogRead(MOISTURE));
+    if (Water) {
+      Serial.print("  Water: ");
+      if (on)
+      Serial.print("PUMP ACTIVATED");
+      Serial.println();
     }
 
     if (Lighting) {
@@ -120,53 +133,64 @@ void refresh() {
   s = rtc.second();
 }
 
+// to avoid overprocessing, use this function to decide if a long enough period has passed
+bool checkTime(unsigned long currentMillis, unsigned long previousMillis, const long interval) {
+  if (currentMillis - previousMillis >= interval) {
+    previousMillis = currentMillis;
+    return true;
+  }
+  else {
+    return false;
+  }
+}
+
 // take time and map it to the appropriate lighting val
 // will ramp up from 0->255 from 7am->8am and back down from 7pm->8pm
 void lights() {
+
   // edge cases
   if (h == 7 || h == 14) {
+    lightsOn = true;
+
     // map minute value to light value
     lightVal = map(m, 0, 60, 0, 255);
   }
   // full strength in daytime
   else if (h > 7 && h < 14) {
+    lightsOn = true;
     lightVal = 255;
   }
   // off at night
   else {
+    lightsOn = false;
     lightVal = 0;
   }
 
 
   // take calculated value and get them lights to shine or nah
-  analogWrite(LIGHT, lightVal);
+  // written a lil redundantly, might change later
+  if (lightsOn) {
+    analogWrite(LIGHT, lightVal);
+  }
+  else {
+    analogWrite(LIGHT, 0);
+  }
+
 }
 
 void water() {
 
-  // read button val to allow manual watering
-  bool on = digitalRead(BUTTON);
+  // if the button is pressed or it is noon then turn pump on
+  pumpOn = digitalRead(BUTTON) || ((h == 12) && (m == 0));
 
-  // test pump w/ prototype shield
-  Serial.print(on);
-  Serial.println();
-
-  if (on) {
+  if (pumpOn) {
     digitalWrite(PUMP, HIGH);
-    Serial.print("PUMP ACTIVATED");
-    Serial.println();
   }
   else {
     digitalWrite(PUMP, LOW);
   }
 
 
-  // for now, im gonna try a time based solution, until I have time to test out the sensor, pump strength, etc.
-
-  //water at noon
-  if (h == 12 && m == 0) {
-    digitalWrite(PUMP, HIGH);
-  }
 
   /*  MOISTURE SENSOR FAULTY
    *   CODE ABANDONED BUT HERE FOR REFERENCE
@@ -213,16 +237,6 @@ void setup() {
 
   // update clock, set global vars for use
   refresh();
-
-
-  // initialize light state
-  if ( h > 7 && h < 14) {
-    lightsOn = true;
-  }
-  else {
-    lightsOn = false;
-  }
-
 }
 
 //////////////////////////////////
@@ -230,12 +244,11 @@ void setup() {
 //////////////////////////////////
 
 void loop() {
-  rtc.update();
   refresh();
   testSensors(1, 0, 1);
 
   // update lights every minute
-  if (rtc.second() == 0) {
+  if (checkTime(millis(), previousMillis, interval)) {
     lights();
   }
 
