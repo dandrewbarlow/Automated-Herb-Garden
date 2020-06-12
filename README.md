@@ -20,4 +20,4 @@ I'm using Sparkfun's custom RTC Arduino Library ([github](https://github.com/spa
 Once again if so inclined I guess you could try to do a custom implementation, but I'm more of a goal oriented person myself.
 
 ## Schematics
-* to be posted when they're made (this is a WIP until otherwise indicated)
+![Schematic Diagram](https://raw.githubusercontent.com/dandrewbarlow/Automated-Herb-Garden/master/schematic.JPG)
