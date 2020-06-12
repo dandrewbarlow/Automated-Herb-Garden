@@ -109,7 +109,7 @@ void testSensors(bool Time, bool Water, bool Lighting) {
 
     if (Water) {
       Serial.print("  Water: ");
-      if (on)
+      if (pumpOn)
       Serial.print("PUMP ACTIVATED");
       Serial.println();
     }
