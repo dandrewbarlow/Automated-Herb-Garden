@@ -102,9 +102,12 @@ void testSensors(bool Time, bool Water, bool Lighting) {
 
     if (Water) {
       Serial.print("  Water: ");
-      if (pumpOn)
-      Serial.print("PUMP ACTIVATED");
-      Serial.println();
+      if (pumpOn) {
+        Serial.print("PUMP ON  ");
+      }
+      else {
+        Serial.print("PUMP OFF  ");
+      }
     }
 
     if (Lighting) {
@@ -126,6 +129,8 @@ void refresh() {
   s = rtc.second();
 }
 
+/*
+ * To make things easier for myself, I ditched this, but I still think its a good idea
 // to avoid overprocessing, use this function to decide if a long enough period has passed
 bool checkTime(unsigned long currentMillis, unsigned long previousMillis, const long interval) {
   if (currentMillis - previousMillis >= interval) {
@@ -136,6 +141,7 @@ bool checkTime(unsigned long currentMillis, unsigned long previousMillis, const 
     return false;
   }
 }
+*/
 
 // take time and map it to the appropriate lighting val
 // will ramp up from 0->255 from 7am->8am and back down from 7pm->8pm
@@ -149,7 +155,7 @@ void lights() {
     lightVal = map(m, 0, 60, 0, 255);
   }
   // full strength in daytime
-  else if (h > 7 && h < 14) {
+  else if (h > 7 && h < 19) {
     lightsOn = true;
     lightVal = 255;
   }
@@ -197,6 +203,7 @@ void setup() {
     Serial.begin(9600);
   }
   // pin inits
+  pinMode(3, OUTPUT);
   pinMode(BUTTON, INPUT);
   pinMode(LIGHT, OUTPUT);
   pinMode(PUMP, OUTPUT);
@@ -220,15 +227,14 @@ void setup() {
 
 void loop() {
   refresh();
-  testSensors(1, 0, 1);
+  
+  testSensors(1, 1, 1);
 
-  // update lights every minute
-  if (checkTime(millis(), previousMillis, interval)) {
-    lights();
-  }
+  lights();
 
-  //water
   water();
+
+
 
 
 }
