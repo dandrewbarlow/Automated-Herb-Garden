@@ -80,13 +80,6 @@ unsigned long previousMillis;
 const long interval = 1000;
 
 
-
-/*  Moisture sensor stuff
-// need to calibrate sensor to both water and air, start with worst case, and correct once exposed to both water & air
-int maxMoist = 0;
-int minMoist = 255;
-*/
-
 //////////////////////////////////
 // HELPER FUNCTIONS //////////////
 //////////////////////////////////
@@ -189,24 +182,6 @@ void water() {
   else {
     digitalWrite(PUMP, LOW);
   }
-
-
-
-  /*  MOISTURE SENSOR FAULTY
-   *   CODE ABANDONED BUT HERE FOR REFERENCE
-
-  // read sensor val
-  int moisture = analogRead(MOISTURE);
-
-  // see if its at an extreme value; could change once I'm more familiar with what to expect
-  if (moisture < minMoist) {
-    minMoist = moisture;
-  }
-  else if (moisture > maxMoist) {
-    maxMoist = moisture;
-  }
-
-  */
 
 }
 
