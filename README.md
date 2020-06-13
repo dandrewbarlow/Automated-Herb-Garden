@@ -4,6 +4,8 @@ An arduino based solution for techies who love spending 12 hours to forget about
 
 Finished as of 6/12! :) I'm still hoping to make improvements but I have it in a working state and am fairly satisfied with its functionality and simplicity. If I were to update it, I doubt it would change substantially, more like trying to design a pcb for it.
 
+I abandoned some code meant to check a moisture sensor and method to run code at certain intervals (to avoid overusing my arduino). I made branches for both of these to preserve the code in case someone else or even me wanted to integrate it into their project.
+
 ## Components:
 * Arduino Uno - to handle any and all logic
 * [Sparkfun DeadOn RTC Breakout Board](https://www.sparkfun.com/products/10160) - to enable time-based control. Be sure to get a 12nm coin cell battery in case of a power failure. I got the breakout board for ease, but you could ostensibly build one cheaper using the DS3234 component
