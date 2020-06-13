@@ -10,6 +10,7 @@ I abandoned some code meant to check a moisture sensor and method to run code at
 * Soldering/electrical skills are a must. This project is not too advanced, and a breadboard can be used for a lot of the hookups, but some things need soldering and a working knowlege of electronics. If you don't have any wire or an accessible soldering iron, this will be hard to complete.
 * You will probably need to create or at least modify an enclosure. I found a very suitable one but I still needed to use a dremel and hot glue to get things in a working state.
 * While not strictly necessary, some electrical components such as a switch/button and pulldown resistor were invaluable for testing my system.
+* I have written some code to get it working for me. If you want to copy me down to a T, that's cool, but if you want to customize it at all, you should probably be able to understand code at least at a beginners level. Heck even if you're copying me you should probably know what the code does. There's a lot of great resources for the arduino though, and I think I commented my code pretty generously.
 
 ## Components:
 * Arduino Uno - to handle any and all logic
