@@ -33,3 +33,16 @@ Once again if so inclined I guess you could try to do a custom implementation, b
 
 ## Schematics
 ![Schematic Diagram](https://raw.githubusercontent.com/dandrewbarlow/Automated-Herb-Garden/master/schematic.JPG)
+
+## Implementation
+Here are a couple pictures of the final product (before putting the circuitry in my enclosure so you can see it). I decided to use a breadboard for the time being so that I have the option of adding functionality or scaling up.
+![Enclosure](https://raw.githubusercontent.com/dandrewbarlow/Automated-Herb-Garden/master/img/enclosure.JPG)
+Here is my enclosure running with the arduino and circuitry in the back
+![Circuitry](https://raw.githubusercontent.com/dandrewbarlow/Automated-Herb-Garden/master/img/circuit.JPG)
+Here is a closer picture of my circuitry. A little messy, but it works as intended :)
+![Pump](https://raw.githubusercontent.com/dandrewbarlow/Automated-Herb-Garden/master/img/pump.JPG)
+Here is a picture of the pump submerged in water in the bottom drawer. Not much to see, but it was fun to get it working.
+![Lights](https://raw.githubusercontent.com/dandrewbarlow/Automated-Herb-Garden/master/img/lights.JPG)
+Here are the grow lights, which turned out to have a handy adhesive on the back, but needed to be attatched to cardboard strips which were then hot glued to the top of the enclosure (it had an uneven surface).
+
+So there it is! This was a lot of fun to build, and I hope to have some delicious fresh herbs with no attention required (until I want to play with this again, lol). I hope this helps someone out, at the very least I had a good time and learned some fun stuff.
