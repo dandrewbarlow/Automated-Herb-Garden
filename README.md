@@ -1,6 +1,8 @@
-# Automated Herb Garden (WIP)
+# Automated Herb Garden
 
 An arduino based solution for techies who love spending 12 hours to forget about 1 minutes worth of work. My goal is to create a self watering, automatically lit, self contained, and time-independent indoor herb garden (open to growing fruits, veggies, peppers, etc.)
+
+Finished as of 6/12! :) I'm still hoping to make improvements but I have it in a working state and am fairly satisfied with its functionality and simplicity. If I were to update it, I doubt it would change substantially, more like trying to design a pcb for it.
 
 ## Components:
 * Arduino Uno - to handle any and all logic
