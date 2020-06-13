@@ -4,7 +4,7 @@
 *
 * This project aims to automatically water and light a small herb garden using an arduino
 *
-* My current watering strategy is to use a sensor to detect soil wetness and water at a certain dryness
+* My current watering strategy is to water at noon for a minute (subject to change based on plant health)
 *
 * For lighting I plan on using Sparkfun's DS3234 Breakout board to keep track of the time and
 * use some strips of LED grow lights to light it during the daytime
@@ -63,12 +63,12 @@
 bool debug = true;
 
 // are the lights on?
-bool lightsOn = true;
+bool lightsOn;
 // how bright are the lights?
-int lightVal = 0;
+int lightVal;
 
 // bool to determine if water pump should be running
-bool pumpOn = false;
+bool pumpOn;
 
 // keep hour, minute, second vals as their own variables to be refreshed/referenced by functions instead of making repeated calls to the rtc
 int h;
