@@ -75,10 +75,6 @@ int h;
 int m;
 int s;
 
-// will hold the value of the last second to be compared with the current and updated once a second (1000ms = interval) passes
-unsigned long previousMillis;
-const long interval = 1000;
-
 
 //////////////////////////////////
 // HELPER FUNCTIONS //////////////
@@ -128,20 +124,6 @@ void refresh() {
   m = rtc.minute();
   s = rtc.second();
 }
-
-/*
- * To make things easier for myself, I ditched this, but I still think its a good idea
-// to avoid overprocessing, use this function to decide if a long enough period has passed
-bool checkTime(unsigned long currentMillis, unsigned long previousMillis, const long interval) {
-  if (currentMillis - previousMillis >= interval) {
-    previousMillis = currentMillis;
-    return true;
-  }
-  else {
-    return false;
-  }
-}
-*/
 
 // take time and map it to the appropriate lighting val
 // will ramp up from 0->255 from 7am->8am and back down from 7pm->8pm
