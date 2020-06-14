@@ -4,7 +4,7 @@
 *
 * This project aims to automatically water and light a small herb garden using an arduino
 *
-* My current watering strategy is to water at noon for a minute (subject to change based on plant health)
+* My current watering strategy is to water at noon for a few seconds [WATERTIME definition] (subject to change based on plant health)
 *
 * For lighting I plan on using Sparkfun's DS3234 Breakout board to keep track of the time and
 * use some strips of LED grow lights to light it during the daytime
@@ -51,6 +51,9 @@
 
 // water pump control, not sure which pin to use yet
 #define PUMP 4
+
+// the second value at which the pump should turn off, e.g. how long to water
+#define WATERTIME 5
 
 #define DS13074_CS_PIN 10 // DeadOn RTC Chip-select pin
 
@@ -162,7 +165,7 @@ void lights() {
 void water() {
 
   // if the button is pressed or it is noon then turn pump on
-  pumpOn = digitalRead(BUTTON) || ((h == 12) && (m == 0));
+  pumpOn = digitalRead(BUTTON) || ((h == 12) && (m == 0) && (s < WATERTIME));
 
   if (pumpOn) {
     digitalWrite(PUMP, HIGH);
